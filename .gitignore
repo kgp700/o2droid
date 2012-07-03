@@ -131,4 +131,12 @@ modules32/fm_si4709/Module.symvers
 modules32/param/Module.symvers
 modules32/rotator/Module.symvers
 modules32/vibetonz/Module.symvers
+kern_2.6.32/include/asm
+kern_2.6.32/include/asm-arm/
+kern_2.6.32/include/linux/autoconf.h
+kern_2.6.32/include/linux/bounds.h
+kern_2.6.32/include/linux/compile.h
+kern_2.6.32/include/linux/utsrelease.h
+kern_2.6.32/kernel/config_data.h
+kern_2.6.32/scripts/bin2c
 
