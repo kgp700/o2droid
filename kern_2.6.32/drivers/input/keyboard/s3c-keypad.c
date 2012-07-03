@@ -39,8 +39,6 @@
 
 #include <plat/pm.h>	
 
-#include <linux/earlysuspend.h>
-
 #ifdef CONFIG_KERNEL_DEBUG_SEC
 #include <linux/kernel_sec_common.h>
 #endif
@@ -65,13 +63,6 @@
 #define TRUE 1
 #define FALSE 0
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
-void s3c_keypad_early_suspend(struct early_suspend *h);
-void s3c_keypad_late_resume(struct early_suspend *h);
-static struct early_suspend early_suspend;
-#endif  /* CONFIG_HAS_EARLYSUSPEND */
-
-static int early_sleep = 0;
 
 static struct timer_list keypad_timer;
 //static struct timer_list powerkey_timer;
@@ -437,13 +428,6 @@ static int __init s3c_keypad_probe(struct platform_device *pdev)
 		       dev_attr_key_pressed.attr.name);
 	}
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
-       early_suspend.suspend = s3c_keypad_early_suspend;
-       early_suspend.resume = s3c_keypad_late_resume;
-       early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
-       register_early_suspend(&early_suspend);
-#endif /* CONFIG_HAS_EARLYSUSPEND */ 
-
 	return 0;
 
  out:
@@ -474,10 +458,6 @@ static int s3c_keypad_remove(struct platform_device *pdev)
 {
 	struct input_dev *input_dev = platform_get_drvdata(pdev);
 	writel(KEYIFCON_CLEAR, key_base + S3C_KEYIFCON);
-
-#ifdef CONFIG_HAS_EARLYSUSPEND
-        unregister_early_suspend(&early_suspend);
-#endif  /* CONFIG_HAS_EARLYSUSPEND */
 
 	if (keypad_clock) {
 		clk_disable(keypad_clock);
@@ -552,29 +532,6 @@ static int s3c_keypad_resume(struct platform_device *dev)
 #define s3c_keypad_suspend NULL
 #define s3c_keypad_resume  NULL
 #endif				/* CONFIG_PM */
-
-#ifdef CONFIG_HAS_EARLYSUSPEND
-extern void s3c_config_gpio_table(int array_size, int (*gpio_table)[6]);
-
-static int keypad_sleep_gpio_table[][6] = {
-#ifdef CONFIG_MACH_OMNIA_II
-        { GPIO_KBR1, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 }, //camera,back
-        { GPIO_KBR2, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 }, //volup,voldown
-#endif
-};
-
-void s3c_keypad_early_suspend(struct early_suspend *handler)
-{
-	early_sleep = 1;
-	s3c_config_gpio_table(ARRAY_SIZE(keypad_sleep_gpio_table), keypad_sleep_gpio_table);
-}
-
-void s3c_keypad_late_resume(struct early_suspend *handler)
-{
-	early_sleep = 0;
-	s3c_setup_keypad_cfg_gpio(KEYPAD_ROWS, KEYPAD_COLUMNS);
-}
-#endif
 
 static struct platform_driver s3c_keypad_driver = {
 	.probe		= s3c_keypad_probe,
