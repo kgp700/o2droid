@@ -125,5 +125,10 @@ scripts/kconfig/zconf.tab.c
 Kernel/include/asm
 Kernel/include/linux/autoconf.h
 Kernel/include/linux/utsrelease.h
-
+modules32/camera/Module.symvers
+modules32/compcache-0.6.2/
+modules32/fm_si4709/Module.symvers
+modules32/param/Module.symvers
+modules32/rotator/Module.symvers
+modules32/vibetonz/Module.symvers
 
