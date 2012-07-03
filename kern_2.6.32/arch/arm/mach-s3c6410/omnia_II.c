@@ -419,7 +419,7 @@ static void omnia_II_pm_power_off(void)
 	{	/* Power Off or Reboot */
 		if (sec_set_param_value)
 			sec_set_param_value(__REBOOT_MODE, &mode);
-		if (get_usb_cable_state() & (JIG_UART_ON | JIG_UART_OFF | JIG_USB_OFF | JIG_USB_ON)) {
+		if (/*get_usb_cable_state() &*/ (JIG_UART_ON | JIG_UART_OFF | JIG_USB_OFF | JIG_USB_ON)) {
 			/* Watchdog Reset */
 			arch_reset(reset_mode);
 		}
@@ -851,13 +851,13 @@ void s3c_setup_keypad_cfg_gpio(int rows, int columns)
 	unsigned int end;
 
 	end = S3C64XX_GPK(8 + rows);
-
+#if 0
 	/* Set all the necessary GPK pins to special-function 0 */
 	for (gpio = S3C64XX_GPK(8); gpio < end; gpio++) {
 		s3c_gpio_cfgpin(gpio, S3C_GPIO_SFN(3));
 		s3c_gpio_setpull(gpio, S3C_GPIO_PULL_NONE);
 	}
-
+#endif
 	end = S3C64XX_GPL(0 + columns);
 
 	/* Set all the necessary GPL pins to special-function 0 */
