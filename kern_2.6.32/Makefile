@@ -181,7 +181,7 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ \
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
 export KBUILD_BUILDHOST := $(SUBARCH)
 ARCH			:= arm
-CROSS_COMPILE   := /opt/cross/bin/arm-linux-gnueabi-
+CROSS_COMPILE   := /root/1test/toolchain/arm-eabi-4.5.4/bin/arm-eabi-
 #CROSS_COMPILE	:= $(shell if [ -f .cross_compile ]; then \
 					cat .cross_compile; \
 					fi)
@@ -327,7 +327,7 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-MODFLAGS	= -DMODULE -marm -march=armv6zk -mfpu=vfp -mtune=arm1176jzf-s -mfloat-abi=softfp
+MODFLAGS	= -DMODULE
 CFLAGS_MODULE   = $(MODFLAGS)
 AFLAGS_MODULE   = $(MODFLAGS)
 LDFLAGS_MODULE  = -T $(srctree)/scripts/module-common.lds
