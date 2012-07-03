@@ -42,8 +42,6 @@
 #include "Si4709_ioctl.h"
 #include "common.h"
 
-#include <linux/wakelock.h>
-
 /*******************************************************/
 
 /*Si4709 IRQ Number*/
@@ -79,8 +77,6 @@ static struct miscdevice Si4709_misc_device = {
 
 wait_queue_head_t Si4709_waitq;
 
-struct wake_lock Si4709_wake_lock;
-
 /***************************************************************/
 
 static int Si4709_open (struct inode *inode, struct file *filp)
@@ -93,8 +89,6 @@ static int Si4709_open (struct inode *inode, struct file *filp)
 static int Si4709_release (struct inode *inode, struct file *filp)
 {
     debug("Si4709_release called");
-    if (wake_lock_active(&Si4709_wake_lock))
-        wake_unlock(&Si4709_wake_lock);
 
     return 0;
 }
@@ -123,8 +117,6 @@ static int Si4709_ioctl(struct inode *inode, struct file *filp,
             {
                 debug("Si4709_IOC_POWERUP failed");
             }
-            if (!wake_lock_active(&Si4709_wake_lock))
-                wake_lock(&Si4709_wake_lock);
             break;
 
         case Si4709_IOC_POWERDOWN:
@@ -132,8 +124,6 @@ static int Si4709_ioctl(struct inode *inode, struct file *filp,
             {
                 debug("Si4709_IOC_POWERDOWN failed");
             }
-            if (wake_lock_active(&Si4709_wake_lock))
-                wake_unlock(&Si4709_wake_lock);
             break;
 
         case Si4709_IOC_BAND_SET:
@@ -692,8 +682,6 @@ int __init Si4709_driver_init(void)
 
 MISC_IRQ_DREG:
     free_irq(Si4709_IRQ, (void *)NULL);
-    if (gpio_is_valid(GPIO_FM_nRST))
-        gpio_free(GPIO_FM_nRST);
 
 MISC_DREG:
     misc_deregister(&Si4709_misc_device);
@@ -710,8 +698,6 @@ void __exit Si4709_driver_exit(void)
     Si4709_i2c_drv_exit();
 
     free_irq(Si4709_IRQ, (void *)NULL);
-    if (gpio_is_valid(GPIO_FM_nRST))
-        gpio_free(GPIO_FM_nRST);
     
     /*misc device deregistration*/
     misc_deregister(&Si4709_misc_device);

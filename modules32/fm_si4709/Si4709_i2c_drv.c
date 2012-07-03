@@ -5,8 +5,6 @@
 #include "Si4709_dev.h"
 #include "common.h"
 
-#include <linux/wakelock.h>
-
 /*extern functions*/
 int Si4709_i2c_drv_init(void);
 void Si4709_i2c_drv_exit(void);
@@ -33,8 +31,6 @@ static const struct i2c_device_id si4709_id[] = {
 	{}
 };
 
-extern struct wake_lock Si4709_wake_lock;
-
 static int Si4709_probe (struct i2c_client *client)
 {
     int ret = 0;
@@ -50,9 +46,6 @@ static int Si4709_probe (struct i2c_client *client)
     {
         debug("Si4709_dev_init failed");
     }
-
-    wake_lock_init(&Si4709_wake_lock, WAKE_LOCK_SUSPEND, "Si4709_lock");
-
 
     return ret;
 }
@@ -72,8 +65,6 @@ static int Si4709_remove(struct i2c_client *client)
     {
         debug("Si4709_dev_exit failed");
     }
-
-    wake_lock_destroy(&Si4709_wake_lock);
 
     return ret;
 }

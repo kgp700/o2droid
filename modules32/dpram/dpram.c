@@ -22,8 +22,8 @@
 #undef CONFIG_ONEDRAM_CHECKBIT
 #define CONFIG_ONEDRAM_TX_RETRY 10
 
-#define LOAD_PHONE_IMAGE
-//#undef define LOAD_PHONE_IMAGE
+//#define LOAD_PHONE_IMAGE
+#undef define LOAD_PHONE_IMAGE
 #define BSS 0
 #define _ENABLE_ERROR_DEVICE
 //#define _DEBUG
@@ -1162,22 +1162,18 @@ static void dpram_phone_power_on(void)
 #ifdef LOAD_PHONE_IMAGE
 	gpio_set_value(GPIO_PHONE_RST_N, GPIO_LEVEL_LOW);
 #endif		
-//	interruptible_sleep_on_timeout(&dpram_wait, 40);	//	mdelay(200);
-	msleep(800);
+	interruptible_sleep_on_timeout(&dpram_wait, 40);	//	mdelay(200);
 
 	gpio_set_value(GPIO_PHONE_ON, GPIO_LEVEL_HIGH);
-//	interruptible_sleep_on_timeout(&dpram_wait, 6);		//	mdelay(30);
-	msleep(120);
+	interruptible_sleep_on_timeout(&dpram_wait, 6);		//	mdelay(30);
 	
 #ifdef LOAD_PHONE_IMAGE
 	gpio_set_value(GPIO_PHONE_RST_N, GPIO_LEVEL_HIGH);
 #endif		
-//	interruptible_sleep_on_timeout(&dpram_wait, 100);	//	mdelay(500);
-	msleep(2000);
+	interruptible_sleep_on_timeout(&dpram_wait, 100);	//	mdelay(500);
 
 	gpio_set_value(GPIO_PHONE_ON, GPIO_LEVEL_LOW);
-//	interruptible_sleep_on_timeout(&dpram_wait, 20);	//	mdelay(100);
-	msleep(400);
+	interruptible_sleep_on_timeout(&dpram_wait, 20);	//	mdelay(100);
 
 	printk(" |      GPIO CONTROL FOR PHONE POWER ON        |\n");
 	phone_power_state = 1;
