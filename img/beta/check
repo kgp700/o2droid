@@ -1,4 +1,0 @@
-cat /proc/driver/dpram
-cat /proc/interrupts
-cat /proc/tty/driver/ttySAC
-
