@@ -2424,7 +2424,8 @@ int s3c_camif_open(struct file *file)
 		up((struct semaphore *) &cfg->cis->lock);
 	}
 #ifdef CONFIG_CPU_FREQ
-	set_dvfs_level(0);
+	//set_dvfs_level(0);
+	set_dvfs_perf_level();
 #endif /* CONFIG_CPU_FREQ */
 	err = s3c_cam_exclusive_open();
 	cfg->cis->user++;
@@ -2476,7 +2477,7 @@ int s3c_camif_release(struct file *file)
 	s3c_cam_exclusive_release();
 
 #ifdef CONFIG_CPU_FREQ
-	set_dvfs_level(1);
+	//set_dvfs_level(1);
 #endif /* CONFIG_CPU_FREQ */
 
 	if (cfg->cis->sensor == NULL)
@@ -2672,7 +2673,7 @@ struct v4l2_file_operations camif_p_fops = {
 void camif_vdev_release (struct video_device *vdev) {
 
 	__TRACE_CAMERA_DRV(printk("[CAM-DRV] +camif_vdev_release\n"));
-	kfree(vdev);
+	//kfree(vdev);
 	__TRACE_CAMERA_DRV(printk("[CAM-DRV] -camif_vdev_release\n"));
 }
 
@@ -3125,6 +3126,7 @@ void s3c_camif_unregister_sensor(camif_cis_t *cis)
 	cis->init_sensor = 0;
 
 	__TRACE_CAMERA_DRV(printk("[CAM-DRV] -s3c_camif_unregister_sensor\n"));
+
 }
 
 module_init(s3c_camif_register);
